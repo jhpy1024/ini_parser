@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2014 Jake Horsfield
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #include "ini_parser.h"
 
 #include <fstream>
@@ -19,6 +41,10 @@ int ini_parser::get_int(const std::string& name, const std::string& section) con
     return std::stoi(sections.at(section).at(name));
 }
 
+/*
+ * The legal values for bools are BOOL_TRUE and BOOL_FALSE.
+ * Anything other than these values are illegal.
+ */
 bool ini_parser::get_bool(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
@@ -134,6 +160,7 @@ std::string ini_parser::extract_value(const std::string& line) const
         /* Skip to equals sign. */
     }
 
+    /* Get everything from the character following the equals sign to the end of the line. */
     for (int i = equals_pos + 1; i < line.length(); ++i)
     {
         value += line[i];
@@ -159,16 +186,27 @@ std::string ini_parser::extract_section_name(const std::string& line) const
     return name;
 }
 
+/*
+ * A line is a comment if the first character is a semi-colon.
+ */
 bool ini_parser::is_comment_line(const std::string& line) const
 {
     return (line.length() > 0) && (line[0] == ';');
 }
 
+/*
+ * A line is the start of a section if the first character is an open
+ * bracket and the last character is a closing bracket.
+ */
 bool ini_parser::is_section_start_line(const std::string& line) const
 {
     return (line.length() > 0) && (line[0] == '[') && (line[line.length() - 1] == ']');
 }
 
+/*
+ * A line contains an assignment if it contains an equals sign and 
+ * there is text before and after this equals sign.
+ */
 bool ini_parser::is_assignment_line(const std::string& line) const
 {
     std::size_t equals_pos = line.find("=");
