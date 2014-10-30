@@ -11,6 +11,13 @@ class ini_parser
     public:
         ini_parser(const std::string& filename);
 
+        int get_int(const std::string& section, const std::string& name) const;
+        bool get_bool(const std::string& section, const std::string& name) const;
+        long get_long(const std::string& section, const std::string& name) const;
+        float get_float(const std::string& section, const std::string& name) const;
+        double get_double(const std::string& section, const std::string& name) const;
+        std::string get_string(const std::string& section, const std::string& name) const;
+
     private:
         void parse(const std::string& filename);
 
@@ -25,12 +32,16 @@ class ini_parser
         bool is_section_start_line(const std::string& line) const;
         bool is_assignment_line(const std::string& line) const;
 
+        void ensure_property_exists(const std::string& section, const std::string& name) const;
+
     private:
-        typedef std::pair<std::string, std::string> property;
-        typedef std::vector<property> properties;
+        typedef std::map<std::string, std::string> properties;
         std::map<std::string, properties> sections;
 
         std::string current_section;
+
+        static const std::string BOOL_TRUE;
+        static const std::string BOOL_FALSE;
 };
 
 #endif

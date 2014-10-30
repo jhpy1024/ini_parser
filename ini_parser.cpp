@@ -2,11 +2,77 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
+
+const std::string ini_parser::BOOL_TRUE = "TRUE";
+const std::string ini_parser::BOOL_FALSE = "FALSE";
 
 ini_parser::ini_parser(const std::string& filename)
     : current_section("")
 {
     parse(filename);
+}
+
+int ini_parser::get_int(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+    return std::stoi(sections.at(section).at(name));
+}
+
+bool ini_parser::get_bool(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+
+    std::string value = sections.at(section).at(name);
+    if (value == BOOL_TRUE)
+    {
+        return true;
+    }
+    else if (value == BOOL_FALSE)
+    {
+        return false;
+    }
+    else
+    {
+        throw std::runtime_error("unable to cast to bool");
+    }
+}
+
+long ini_parser::get_long(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+    return std::stol(sections.at(section).at(name));
+}
+
+float ini_parser::get_float(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+    return std::stof(sections.at(section).at(name));
+}
+
+double ini_parser::get_double(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+    return std::stod(sections.at(section).at(name));
+}
+
+std::string ini_parser::get_string(const std::string& section, const std::string& name) const
+{
+    ensure_property_exists(section, name);
+    return sections.at(section).at(name);
+}
+
+void ini_parser::ensure_property_exists(const std::string& section, const std::string& name) const
+{
+    if (sections.find(section) == sections.end())
+    {
+        throw std::runtime_error("section does not exist");
+    }
+
+    if (sections.at(section).find(name) == sections.at(section).end())
+    {
+        throw std::runtime_error("property does not exist");
+    }
 }
 
 void ini_parser::parse(const std::string& filename)
@@ -42,9 +108,8 @@ void ini_parser::handle_assignment(const std::string& line)
 {
     std::string key = extract_key(line);
     std::string value = extract_value(line);
-    property prop = std::make_pair(key, value);
 
-    sections[current_section].push_back(prop);
+    sections[current_section][key] = value;
 }
 
 std::string ini_parser::extract_key(const std::string& line) const
