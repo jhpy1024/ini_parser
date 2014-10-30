@@ -14,6 +14,13 @@ class ini_parser
     private:
         void parse(const std::string& filename);
 
+        void start_section(const std::string& line);
+        std::string extract_section_name(const std::string& line) const;
+
+        void handle_assignment(const std::string& line);
+        std::string extract_key(const std::string& line) const;
+        std::string extract_value(const std::string& value) const;
+
         bool is_comment_line(const std::string& line) const;
         bool is_section_start_line(const std::string& line) const;
         bool is_assignment_line(const std::string& line) const;
