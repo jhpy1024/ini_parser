@@ -23,7 +23,6 @@
 #include "ini_parser.h"
 
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 
 const std::string ini_parser::BOOL_TRUE = "TRUE";
@@ -87,6 +86,77 @@ std::string ini_parser::get_string(const std::string& name, const std::string& s
 {
     ensure_property_exists(section, name);
     return sections.at(section).at(name);
+}
+
+void ini_parser::set_value(const std::string& name, int value, const std::string& section)
+{
+    set_value(name, std::to_string(value), section);
+}
+
+void ini_parser::set_value(const std::string& name, bool value, const std::string& section)
+{
+    set_value(name, (value ? BOOL_TRUE : BOOL_FALSE), section);
+}
+
+void ini_parser::set_value(const std::string& name, long value, const std::string& section)
+{
+    set_value(name, std::to_string(value), section);
+}
+
+void ini_parser::set_value(const std::string& name, float value, const std::string& section)
+{
+    set_value(name, std::to_string(value), section);
+}
+
+void ini_parser::set_value(const std::string& name, double value, const std::string& section)
+{
+    set_value(name, std::to_string(value), section);
+}
+
+void ini_parser::set_value(const std::string& name, const std::string& value, const std::string& section)
+{
+    ensure_property_exists(section, name);
+    sections[section][name] = value;
+
+    bool replaced = false;
+    std::string current_section = "";
+
+    /*
+     * Note that references to "current_section" refer to the local
+     * variable defined above, not the member variable.
+     */
+    for (int i = 0; i < input.size(); ++i)
+    {
+        std::string& line = input[i];
+        if (is_section_start_line(line))
+        {
+            current_section = extract_section_name(line);
+        }
+        else if (is_assignment_line(line))
+        {
+            std::string key = extract_key(line);
+            if (key == name && current_section == section)
+            {
+                line = key;
+                line += "=";
+                line += value;
+                replaced = true;
+            }
+        }
+    }
+
+    if (replaced)
+    {
+        std::fstream file(filename);
+        for (const std::string& line : input)
+        {
+            file << line << std::endl;
+        }
+    }
+    else
+    {
+        throw std::runtime_error("property does not exist so cannot change its value");
+    }
 }
 
 void ini_parser::ensure_property_exists(const std::string& section, const std::string& name) const

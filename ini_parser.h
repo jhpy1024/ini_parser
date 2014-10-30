@@ -40,6 +40,13 @@ class ini_parser
         double get_double(const std::string& name, const std::string& section = "") const;
         std::string get_string(const std::string& name, const std::string& section = "") const;
 
+        void set_value(const std::string& name, int value, const std::string& section = "");
+        void set_value(const std::string& name, bool value, const std::string& section = "");
+        void set_value(const std::string& name, long value, const std::string& section = "");
+        void set_value(const std::string& name, float value, const std::string& section = "");
+        void set_value(const std::string& name, double value, const std::string& section = "");
+        void set_value(const std::string& name, const std::string& value, const std::string& section = "");
+
     private:
         void parse(const std::string& filename);
 
