@@ -11,12 +11,12 @@ class ini_parser
     public:
         ini_parser(const std::string& filename);
 
-        int get_int(const std::string& section, const std::string& name) const;
-        bool get_bool(const std::string& section, const std::string& name) const;
-        long get_long(const std::string& section, const std::string& name) const;
-        float get_float(const std::string& section, const std::string& name) const;
-        double get_double(const std::string& section, const std::string& name) const;
-        std::string get_string(const std::string& section, const std::string& name) const;
+        int get_int(const std::string& name, const std::string& section = "") const;
+        bool get_bool(const std::string& name, const std::string& section = "") const;
+        long get_long(const std::string& name, const std::string& section = "") const;
+        float get_float(const std::string& name, const std::string& section = "") const;
+        double get_double(const std::string& name, const std::string& section = "") const;
+        std::string get_string(const std::string& name, const std::string& section = "") const;
 
     private:
         void parse(const std::string& filename);

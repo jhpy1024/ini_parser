@@ -13,13 +13,13 @@ ini_parser::ini_parser(const std::string& filename)
     parse(filename);
 }
 
-int ini_parser::get_int(const std::string& section, const std::string& name) const
+int ini_parser::get_int(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
     return std::stoi(sections.at(section).at(name));
 }
 
-bool ini_parser::get_bool(const std::string& section, const std::string& name) const
+bool ini_parser::get_bool(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
 
@@ -38,25 +38,25 @@ bool ini_parser::get_bool(const std::string& section, const std::string& name) c
     }
 }
 
-long ini_parser::get_long(const std::string& section, const std::string& name) const
+long ini_parser::get_long(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
     return std::stol(sections.at(section).at(name));
 }
 
-float ini_parser::get_float(const std::string& section, const std::string& name) const
+float ini_parser::get_float(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
     return std::stof(sections.at(section).at(name));
 }
 
-double ini_parser::get_double(const std::string& section, const std::string& name) const
+double ini_parser::get_double(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
     return std::stod(sections.at(section).at(name));
 }
 
-std::string ini_parser::get_string(const std::string& section, const std::string& name) const
+std::string ini_parser::get_string(const std::string& name, const std::string& section) const
 {
     ensure_property_exists(section, name);
     return sections.at(section).at(name);
@@ -64,7 +64,7 @@ std::string ini_parser::get_string(const std::string& section, const std::string
 
 void ini_parser::ensure_property_exists(const std::string& section, const std::string& name) const
 {
-    if (sections.find(section) == sections.end())
+    if (section != "" && sections.find(section) == sections.end())
     {
         throw std::runtime_error("section does not exist");
     }
