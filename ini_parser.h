@@ -57,6 +57,9 @@ class ini_parser
         void ensure_property_exists(const std::string& section, const std::string& name) const;
 
     private:
+        const std::string filename;
+        std::vector<std::string> input;
+
         typedef std::map<std::string, std::string> properties;
         std::map<std::string, properties> sections;
 

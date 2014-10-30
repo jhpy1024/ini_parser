@@ -30,7 +30,8 @@ const std::string ini_parser::BOOL_TRUE = "TRUE";
 const std::string ini_parser::BOOL_FALSE = "FALSE";
 
 ini_parser::ini_parser(const std::string& filename)
-    : current_section("")
+    : filename(filename)
+    , current_section("")
 {
     parse(filename);
 }
@@ -115,6 +116,8 @@ void ini_parser::parse(const std::string& filename)
     std::string line;
     while (std::getline(file, line))
     {
+        input.push_back(line);
+
         if (is_comment_line(line))
         {
             continue;
