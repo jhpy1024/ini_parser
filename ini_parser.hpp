@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <sstream>
 #include <fstream>
 #include <stdexcept>
 
