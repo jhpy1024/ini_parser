@@ -103,6 +103,10 @@ class ini_parser
             {
                 create_property_no_section(name, value);
             }
+            else
+            {
+                create_property_in_section(name, value, section);
+            }
         }
 
         /* Writes a new line at the bottom of the file, followed by the start of the section. */
@@ -241,14 +245,37 @@ class ini_parser
     private:
         void create_property_no_section(const std::string& name, const std::string& value)
         {
-            std::string line = name;
-            line += "=";
-            line += value;
+            std::string line = name + "=" + value;
 
             input.insert(input.begin(), line);
             write_input_to_file();
 
             sections[""][name] = value;
+        }
+
+        void create_property_in_section(const std::string& name, const std::string& value, const std::string& section)
+        {
+            std::string line = name + "=" + value;
+            std::string tmp_current_section = "";
+
+            for (auto it = input.begin(); it != input.end(); ++it)
+            {
+                if (is_section_start_line(*it))
+                {
+                    tmp_current_section = extract_section_name(*it);
+
+                    if (tmp_current_section == section)
+                    {
+                        input.insert(it + 1, line);
+                        write_input_to_file();
+                        sections[section][name] = value;
+                        return;
+                    }
+                }
+            }
+
+            /* Section was not found. */
+            throw std::runtime_error("unable to create property in section");
         }
 
         void write_input_to_file()
