@@ -23,7 +23,6 @@
 #ifndef INI_PARSER_H
 #define INI_PARSER_H
 
-
 #include <map>
 #include <string>
 #include <vector>
@@ -91,6 +90,19 @@ class ini_parser
             , current_section("")
         {
             parse(filename);
+        }
+
+        void create_property(const std::string& name, const std::string& value, const std::string& section = "")
+        {
+            if (name.empty() || value.empty())
+            {
+                throw std::runtime_error("when creating a property, the name or value cannot be empty");
+            }
+
+            if (section.empty())
+            {
+                create_property_no_section(name, value);
+            }
         }
 
         int get_int(const std::string& name, const std::string& section = "") const
@@ -205,11 +217,7 @@ class ini_parser
 
             if (replaced)
             {
-                std::fstream file(filename);
-                for (const std::string& line : input)
-                {
-                    file << line << std::endl;
-                }
+                write_input_to_file();
             }
             else
             {
@@ -218,6 +226,28 @@ class ini_parser
         }
 
     private:
+        void create_property_no_section(const std::string& name, const std::string& value)
+        {
+            std::string line = name;
+            line += "=";
+            line += value;
+
+            input.insert(input.begin(), line);
+            write_input_to_file();
+
+            sections[""][name] = value;
+        }
+
+        void write_input_to_file()
+        {
+            std::fstream file(filename);
+            for (const std::string& line : input)
+            {
+                file << line << std::endl;
+            }
+            file.close();
+        }
+
         void parse(const std::string& filename)
         {
             std::fstream file;
