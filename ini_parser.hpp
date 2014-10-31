@@ -105,6 +105,19 @@ class ini_parser
             }
         }
 
+        /* Writes a new line at the bottom of the file, followed by the start of the section. */
+        void create_section(const std::string& name)
+        {
+            if (name.empty())
+            {
+                throw std::runtime_error("when creating section, its name cannot be empty");
+            }
+
+            std::string line = "\n[" + name + "]";
+            input.push_back(line);
+            write_input_to_file();
+        }
+
         int get_int(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
