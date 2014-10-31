@@ -1,4 +1,4 @@
-#include "ini_parser.h"
+#include "ini_parser.hpp"
 
 #include <iostream>
 
