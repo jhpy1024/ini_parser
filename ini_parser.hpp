@@ -31,15 +31,11 @@
 #include <fstream>
 #include <stdexcept>
 
-/* TODO: Remove. */
-#include <iostream>
-
-/* 
- * Adds support for functions not available in minGW.
- * http://pastebin.com/KMTd7Xtk#
+/*
+ * Allows this to work with compilers that do not support
+ * these functions (such as MinGW).
  */
-#ifdef __MINGW32__
-namespace std
+namespace
 {
     template <class T> std::string to_string(T val)
     {
@@ -84,7 +80,6 @@ namespace std
         return ret;
     }
 }
-#endif // __MINGW32__
 
 class ini_parser
 {
@@ -129,7 +124,7 @@ class ini_parser
         int get_int(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return std::stoi(sections.at(section).at(name));
+            return str::stoi(sections.at(section).at(name));
         }
 
         /*
@@ -158,19 +153,19 @@ class ini_parser
         long get_long(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return std::stol(sections.at(section).at(name));
+            return stol(sections.at(section).at(name));
         }
 
         float get_float(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return std::stof(sections.at(section).at(name));
+            return stof(sections.at(section).at(name));
         }
 
         double get_double(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return std::stod(sections.at(section).at(name));
+            return stod(sections.at(section).at(name));
         }
 
         std::string get_string(const std::string& name, const std::string& section = "") const
@@ -181,7 +176,7 @@ class ini_parser
 
         void set_value(const std::string& name, int value, const std::string& section = "")
         {
-            set_value(name, std::to_string(value), section);
+            set_value(name, to_string(value), section);
         }
 
         void set_value(const std::string& name, bool value, const std::string& section = "")
@@ -191,17 +186,17 @@ class ini_parser
 
         void set_value(const std::string& name, long value, const std::string& section = "")
         {
-            set_value(name, std::to_string(value), section);
+            set_value(name, to_string(value), section);
         }
 
         void set_value(const std::string& name, float value, const std::string& section = "")
         {
-            set_value(name, std::to_string(value), section);
+            set_value(name, to_string(value), section);
         }
 
         void set_value(const std::string& name, double value, const std::string& section = "")
         {
-            set_value(name, std::to_string(value), section);
+            set_value(name, to_string(value), section);
         }
 
         void set_value(const std::string& name, const std::string& value, const std::string& section = "")
@@ -283,9 +278,16 @@ class ini_parser
         void write_input_to_file()
         {
             std::fstream file(filename);
-            for (const std::string& line : input)
+            for (int i = 0; i < input.size(); ++i)
             {
-                file << line << std::endl;
+                if (i == input.size() - 1)
+                {
+                    file << input[i] << std::endl;
+                }
+                else
+                {
+                    file << input[i] << "\n";
+                }
             }
             file.close();
         }

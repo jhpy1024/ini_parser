@@ -7,7 +7,7 @@ int main()
     ini_parser parser("test.ini");
     parser.set_value("hi", false);
     parser.set_value("age", 69);
-    parser.set_value("sex", std::string("dog"));
+    parser.set_value("sex", std::string("cat"));
 
     return 0;
 }
