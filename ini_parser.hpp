@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2014 Jake Horsfield
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -124,7 +124,7 @@ class ini_parser
         int get_int(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return str::stoi(sections.at(section).at(name));
+            return ::stoi(sections.at(section).at(name));
         }
 
         /*
@@ -153,19 +153,19 @@ class ini_parser
         long get_long(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return stol(sections.at(section).at(name));
+            return ::stol(sections.at(section).at(name));
         }
 
         float get_float(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return stof(sections.at(section).at(name));
+            return ::stof(sections.at(section).at(name));
         }
 
         double get_double(const std::string& name, const std::string& section = "") const
         {
             ensure_property_exists(section, name);
-            return stod(sections.at(section).at(name));
+            return ::stod(sections.at(section).at(name));
         }
 
         std::string get_string(const std::string& name, const std::string& section = "") const
@@ -176,7 +176,7 @@ class ini_parser
 
         void set_value(const std::string& name, int value, const std::string& section = "")
         {
-            set_value(name, to_string(value), section);
+            set_value(name, ::to_string(value), section);
         }
 
         void set_value(const std::string& name, bool value, const std::string& section = "")
@@ -186,17 +186,17 @@ class ini_parser
 
         void set_value(const std::string& name, long value, const std::string& section = "")
         {
-            set_value(name, to_string(value), section);
+            set_value(name, ::to_string(value), section);
         }
 
         void set_value(const std::string& name, float value, const std::string& section = "")
         {
-            set_value(name, to_string(value), section);
+            set_value(name, ::to_string(value), section);
         }
 
         void set_value(const std::string& name, double value, const std::string& section = "")
         {
-            set_value(name, to_string(value), section);
+            set_value(name, ::to_string(value), section);
         }
 
         void set_value(const std::string& name, const std::string& value, const std::string& section = "")
@@ -211,7 +211,7 @@ class ini_parser
              * Note that references to "current_section" refer to the local
              * variable defined above, not the member variable.
              */
-            for (int i = 0; i < input.size(); ++i)
+            for (unsigned i = 0; i < input.size(); ++i)
             {
                 std::string& line = input[i];
                 if (is_section_start_line(line))
@@ -278,11 +278,11 @@ class ini_parser
         void write_input_to_file()
         {
             std::fstream file(filename);
-            for (int i = 0; i < input.size(); ++i)
+            for (unsigned i = 0; i < input.size(); ++i)
             {
                 if (i == input.size() - 1)
                 {
-                    file << input[i] << std::endl;
+                    file << input[i];
                 }
                 else
                 {
@@ -371,7 +371,7 @@ class ini_parser
             }
 
             /* Get everything from the character following the equals sign to the end of the line. */
-            for (int i = equals_pos + 1; i < line.length(); ++i)
+            for (unsigned i = equals_pos + 1; i < line.length(); ++i)
             {
                 value += line[i];
             }
@@ -397,7 +397,7 @@ class ini_parser
         }
 
         /*
-         * A line contains an assignment if it contains an equals sign and 
+         * A line contains an assignment if it contains an equals sign and
          * there is text before and after this equals sign.
          */
         bool is_assignment_line(const std::string& line) const
