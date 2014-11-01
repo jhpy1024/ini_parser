@@ -5,8 +5,9 @@
 int main()
 {
     ini_parser parser("test.ini");
-    parser.create_property("project_name", "Galactic Empires");
-    parser.create_property("foo", "bar", "fancy_new_section");
+    parser.set_value("hi", false);
+    parser.set_value("age", 69);
+    parser.set_value("sex", std::string("dog"));
 
     return 0;
 }

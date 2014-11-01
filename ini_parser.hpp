@@ -31,6 +31,9 @@
 #include <fstream>
 #include <stdexcept>
 
+/* TODO: Remove. */
+#include <iostream>
+
 /* 
  * Adds support for functions not available in minGW.
  * http://pastebin.com/KMTd7Xtk#
@@ -183,7 +186,7 @@ class ini_parser
 
         void set_value(const std::string& name, bool value, const std::string& section = "")
         {
-            set_value(name, (value ? BOOL_TRUE : BOOL_FALSE), section);
+            set_value(name, (value ? std::string(BOOL_TRUE) : std::string(BOOL_FALSE)), section);
         }
 
         void set_value(const std::string& name, long value, const std::string& section = "")
@@ -225,9 +228,7 @@ class ini_parser
                     std::string key = extract_key(line);
                     if (key == name && current_section == section)
                     {
-                        line = key;
-                        line += "=";
-                        line += value;
+                        line = key + "=" + value;
                         replaced = true;
                     }
                 }
@@ -425,8 +426,8 @@ class ini_parser
 
         std::string current_section;
 
-        static constexpr const char* BOOL_TRUE = "TRUE";
-        static constexpr const char* BOOL_FALSE = "FALSE";
+        static constexpr const char* BOOL_TRUE = "BOOL_TRUE";
+        static constexpr const char* BOOL_FALSE = "BOOL_FALSE";
 };
 
 #endif
