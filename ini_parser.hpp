@@ -29,7 +29,6 @@
 #include <utility>
 #include <sstream>
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 
 /*
@@ -422,8 +421,11 @@ class ini_parser
 
         std::string current_section;
 
-        static constexpr const char* BOOL_TRUE = "BOOL_TRUE";
-        static constexpr const char* BOOL_FALSE = "BOOL_FALSE";
+        static const std::string BOOL_TRUE;
+        static const std::string BOOL_FALSE;
 };
+
+const std::string ini_parser::BOOL_TRUE = "BOOL_TRUE";
+const std::string ini_parser::BOOL_FALSE = "BOOL_FALSE";
 
 #endif
