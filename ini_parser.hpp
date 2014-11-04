@@ -29,6 +29,7 @@
 #include <utility>
 #include <sstream>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 
 /*
@@ -277,17 +278,10 @@ class ini_parser
 
         void write_input_to_file()
         {
-            std::fstream file(filename);
-            for (unsigned i = 0; i < input.size(); ++i)
+            std::ofstream file(filename);
+            for (const auto& line : input)
             {
-                if (i == input.size() - 1)
-                {
-                    file << input[i];
-                }
-                else
-                {
-                    file << input[i] << "\n";
-                }
+                file << line << '\n';
             }
             file.close();
         }
