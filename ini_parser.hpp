@@ -84,9 +84,14 @@ namespace
 class ini_parser
 {
     public:
+        const std::string BOOL_TRUE;
+        const std::string BOOL_FALSE;
+
         ini_parser(const std::string& filename)
             : filename(filename)
             , current_section("")
+            , BOOL_TRUE("BOOL_TRUE")
+            , BOOL_FALSE("BOOL_FALSE")
         {
             parse(filename);
         }
@@ -146,7 +151,7 @@ class ini_parser
             }
             else
             {
-                throw std::runtime_error("unable to cast to bool");
+                throw std::runtime_error("unable to cast \"" + value + "\" to bool");
             }
         }
 
@@ -235,7 +240,7 @@ class ini_parser
             }
             else
             {
-                throw std::runtime_error("property does not exist so cannot change its value");
+                throw std::runtime_error("property \"" + name + "\" in section \"" + section + "\"does not exist so cannot change its value");
             }
         }
 
@@ -272,7 +277,7 @@ class ini_parser
             }
 
             /* Section was not found. */
-            throw std::runtime_error("unable to create property in section");
+            throw std::runtime_error("unable to create property \"" + name + "\" in section \"" + section + "\"");
         }
 
         void write_input_to_file()
@@ -403,12 +408,12 @@ class ini_parser
         {
             if (section != "" && sections.find(section) == sections.end())
             {
-                throw std::runtime_error("section does not exist");
+                throw std::runtime_error("section \"" + section + "\" does not exist");
             }
 
             if (sections.at(section).find(name) == sections.at(section).end())
             {
-                throw std::runtime_error("property does not exist");
+                throw std::runtime_error("property \"" + section + "\" does not exist");
             }
         }
 
@@ -420,9 +425,6 @@ class ini_parser
         std::map<std::string, properties> sections;
 
         std::string current_section;
-
-        const std::string BOOL_TRUE;
-        const std::string BOOL_FALSE;
 };
 
 #endif
